@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index page</title>
+</head>
+<body>
+<form>
+    <input name="name" placeholder="用户名"><br>
+    <input name="phone" placeholder="手机号"><br>
+    <button type="button" onclick="addUser()">添加</button>
+</form>
+<div>
+    <ul id="userData"></ul>
+</div>
+<script src="/static/js/jquery.min.js"></script>
+<script>
+    $(function () {
+        $.getJSON('/user/', function(data){
+            if(data.state == 'ok'){
+                for (var i=0;i<data.data.length;i++){
+                   user = data.data
+                   $('#userData').append("<li>"+user.name+":"+user.age+"</li>")
+                }
+            }
+        })
+    })
+    function addUser() {
+        //通过ajax方式上传表单
+        $.ajax('/user', {
+            type:'POST',
+            data:$('form').serialize() //表单序列化之后的字符串
+            dataType: 'json', //响应的数据类型
+            success: function(data) {
+                //data -> {state:'ok',msg:'添加成功'
+                alert(data.msg);
+            }
+        })
+    }
+
+</script>
+</body>
+</html>
